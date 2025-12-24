@@ -39,5 +39,23 @@ class JWTService
         return JWT::decode($token, new Key($this->secret, $this->algo));
     }
 
+    public function validateToken(string $token): bool
+    {
+        try {
+            $this->decodeToken($token);
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 
+    public function getUserFromToken(string $token): ?User
+    {
+        try {
+            $decoded = $this->decodeToken($token);
+            return User::find($decoded->sub);
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
 }
