@@ -35,4 +35,13 @@ class UserProfile extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+
+    public function addXP(int $amount): void
+    {
+        $this->current_xp += $amount;
+        $this->checkLevelUp();
+        $this->save();
+    }
+
 }
