@@ -4,17 +4,16 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
+use App\Services\JWTService;
 
 class JWTMiddleware
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     */
-    public function handle(Request $request, Closure $next): Response
+    private JWTService $jwtService;
+
+    public function __construct(JWTService $jwtService)
     {
-        return $next($request);
+        $this->jwtService = $jwtService;
     }
+
+
 }
