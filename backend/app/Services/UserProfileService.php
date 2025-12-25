@@ -41,4 +41,27 @@ class UserProfileService
             ]),
         ];
     }
+
+    public function updateProfile(User $user, array $data): UserProfile
+    {
+        $profile = $user->profile;
+
+        if (isset($data['name'])) {
+            $user->name = $data['name'];
+            $user->save();
+        }
+
+        $profileData = array_filter([
+            'bio' => $data['bio'] ?? null,
+            'github_url' => $data['github_url'] ?? null,
+            'linkedin_url' => $data['linkedin_url'] ?? null,
+        ], fn($value) => $value !== null);
+
+        if (!empty($profileData)) {
+            $profile->update($profileData);
+        }
+
+        return $profile->fresh();
+    }
+
 }
