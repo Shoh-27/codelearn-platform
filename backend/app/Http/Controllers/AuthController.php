@@ -79,4 +79,29 @@ class AuthController extends Controller
             ], 500);
         }
     }
+
+    public function me(Request $request)
+    {
+        try {
+            $user = $this->authService->me(auth()->user());
+
+            return response()->json([
+                'data' => $user
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to fetch user data',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function logout()
+    {
+        $this->authService->logout();
+
+        return response()->json([
+            'message' => 'Logout successful'
+        ], 200);
+    }
 }
