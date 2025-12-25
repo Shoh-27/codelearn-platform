@@ -46,5 +46,37 @@ class AuthController extends Controller
         }
     }
 
+    public function login(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+            'password' => 'required|string',
+        ]);
 
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Validation failed',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        try {
+            $result = $this->authService->login($request->only(['email', 'password']));
+
+            return response()->json([
+                'message' => 'Login successful',
+                'data' => $result
+            ], 200);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'message' => 'Login failed',
+                'errors' => $e->errors()
+            ], 401);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Login failed',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 }
