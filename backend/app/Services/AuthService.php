@@ -82,7 +82,16 @@ class AuthService
         ];
     }
 
+    public function me(User $user): User
+    {
+        return $user->load(['profile', 'badges']);
+    }
 
+    public function logout(): void
+    {
+        // Token blacklisting can be implemented here if needed
+        // For MVP, client-side token removal is sufficient
+    }
 
 
 }
