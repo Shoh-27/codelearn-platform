@@ -58,5 +58,31 @@ class AuthService
         }
     }
 
+    public function login(array $credentials): array
+    {
+        $user = User::where('email', $credentials['email'])->first();
+
+        if (!$user || !Hash::check($credentials['password'], $user->password)) {
+            throw ValidationException::withMessages([
+                'email' => ['The provided credentials are incorrect.'],
+            ]);
+        }
+
+        if (!$user->is_active) {
+            throw ValidationException::withMessages([
+                'email' => ['Your account has been deactivated.'],
+            ]);
+        }
+
+        $token = $this->jwtService->generateToken($user);
+
+        return [
+            'user' => $user->load('profile'),
+            'token' => $token,
+        ];
+    }
+
+
+
 
 }
