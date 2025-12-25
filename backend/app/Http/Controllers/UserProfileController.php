@@ -15,4 +15,21 @@ class UserProfileController extends Controller
         $this->profileService = $profileService;
     }
 
+    public function show(Request $request)
+    {
+        try {
+            $profile = $this->profileService->getProfile(auth()->user());
+
+            return response()->json([
+                'data' => $profile
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to fetch profile',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+
 }
