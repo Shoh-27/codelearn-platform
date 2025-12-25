@@ -28,6 +28,11 @@ class User extends Authenticatable
         'updated_at' => 'datetime',
     ];
 
+    public function profile()
+    {
+        return $this->hasOne(UserProfile::class);
+    }
+
     public function isAdmin(): bool
     {
         return $this->role === 'admin';
