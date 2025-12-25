@@ -70,5 +70,19 @@ class UserProfileController extends Controller
         }
     }
 
+    public function stats(Request $request)
+    {
+        try {
+            $stats = $this->profileService->getStats(auth()->user());
 
+            return response()->json([
+                'data' => $stats
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to fetch stats',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 }
