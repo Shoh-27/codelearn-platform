@@ -81,5 +81,35 @@ class UserProfileService
         return Storage::url($path);
     }
 
+    public function getStats(User $user): array
+    {
+        $profile = $user->profile;
 
+        $completedChallenges = $user->challengeProgress()
+            ->where('status', 'completed')
+            ->count();
+
+        $totalXPEarned = $user->xpTransactions()->sum('amount');
+
+        $recentActivity = $user->xpTransactions()
+            ->latest()
+            ->take(10)
+            ->get()
+            ->map(fn($transaction) => [
+                'amount' => $transaction->amount,
+                'source_type' => $transaction->source_type,
+                'description' => $transaction->description,
+                'created_at' => $transaction->created_at->diffForHumans(),
+            ]);
+
+        return [
+            'current_xp' => $profile->current_xp,
+            'current_level' => $profile->current_level,
+            'total_xp_earned' => $totalXPEarned,
+            'challenges_completed' => $completedChallenges,
+            'projects_completed' => $profile->total_projects_completed,
+            'badges_earned' => $user->badges->count(),
+            'recent_activity' => $recentActivity,
+        ];
+    }
 }
