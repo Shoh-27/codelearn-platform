@@ -64,4 +64,22 @@ class UserProfileService
         return $profile->fresh();
     }
 
+    public function uploadAvatar(User $user, $file): string
+    {
+        $profile = $user->profile;
+
+        // Delete old avatar if exists
+        if ($profile->avatar) {
+            Storage::disk('public')->delete($profile->avatar);
+        }
+
+        // Store new avatar
+        $path = $file->store('avatars', 'public');
+
+        $profile->update(['avatar' => $path]);
+
+        return Storage::url($path);
+    }
+
+
 }
