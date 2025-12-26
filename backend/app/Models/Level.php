@@ -21,4 +21,8 @@ class Level extends Model
         'xp_required' => 'integer',
     ];
 
+    public function users()
+    {
+        return $this->hasMany(UserProfile::class, 'current_level', 'level_number');
+    }
 }
