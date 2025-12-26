@@ -28,4 +28,16 @@ class Badge extends Model
             ->withPivot('earned_at');
     }
 
+    public function checkRequirement(User $user): bool
+    {
+        $profile = $user->profile;
+
+        return match ($this->requirement_type) {
+            'xp' => $profile->current_xp >= $this->requirement_value,
+            'challenges' => $profile->total_challenges_completed >= $this->requirement_value,
+            'projects' => $profile->total_projects_completed >= $this->requirement_value,
+            'streak' => false, // Implement streak logic if needed
+            default => false,
+        };
+    }
 }
