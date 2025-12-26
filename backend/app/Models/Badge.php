@@ -21,4 +21,11 @@ class Badge extends Model
         'requirement_value' => 'integer',
     ];
 
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'user_badges')
+            ->withTimestamps()
+            ->withPivot('earned_at');
+    }
+
 }
