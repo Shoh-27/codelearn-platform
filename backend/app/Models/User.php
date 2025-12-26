@@ -40,6 +40,11 @@ class User extends Authenticatable
             ->withPivot('earned_at');
     }
 
+    public function xpTransactions()
+    {
+        return $this->hasMany(XpTransaction::class);
+    }
+
     public function isAdmin(): bool
     {
         return $this->role === 'admin';
