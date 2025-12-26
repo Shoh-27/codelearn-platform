@@ -33,6 +33,18 @@ class User extends Authenticatable
         return $this->hasOne(UserProfile::class);
     }
 
+    public function badges()
+    {
+        return $this->belongsToMany(Badge::class, 'user_badges')
+            ->withTimestamps()
+            ->withPivot('earned_at');
+    }
+
+    public function xpTransactions()
+    {
+        return $this->hasMany(XpTransaction::class);
+    }
+
     public function isAdmin(): bool
     {
         return $this->role === 'admin';
