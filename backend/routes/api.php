@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-
+use App\Http\Controllers\GamificationController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -22,6 +22,13 @@ Route::middleware(['jwt.auth'])->group(function () {
     Route::prefix('auth')->group(function () {
         Route::get('/me', [AuthController::class, 'me']);
         Route::post('/logout', [AuthController::class, 'logout']);
+    });
+
+    // Gamification
+    Route::prefix('gamification')->group(function () {
+        Route::get('/leaderboard', [GamificationController::class, 'leaderboard']);
+        Route::get('/badges', [GamificationController::class, 'badges']);
+        Route::get('/levels', [GamificationController::class, 'levels']);
     });
 
 });
