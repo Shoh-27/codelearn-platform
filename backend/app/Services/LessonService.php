@@ -50,5 +50,20 @@ class LessonService
         ];
     }
 
+    public function createLesson(array $data): Lesson
+    {
+        return Lesson::create($data);
+    }
 
+    public function updateLesson(int $id, array $data): Lesson
+    {
+        $lesson = Lesson::findOrFail($id);
+        $lesson->update($data);
+        return $lesson->fresh();
+    }
+
+    public function deleteLesson(int $id): void
+    {
+        Lesson::findOrFail($id)->delete();
+    }
 }
