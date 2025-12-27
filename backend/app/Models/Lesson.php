@@ -27,4 +27,15 @@ class Lesson extends Model
         'is_published' => 'boolean',
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($lesson) {
+            if (empty($lesson->slug)) {
+                $lesson->slug = Str::slug($lesson->title);
+            }
+        });
+    }
+
 }
