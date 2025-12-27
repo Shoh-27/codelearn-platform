@@ -52,4 +52,27 @@ class GamificationService
             throw $e;
         }
     }
+
+    public function checkAndAwardBadges(User $user): array
+    {
+        $newBadges = [];
+        $earnedBadgeIds = $user->badges->pluck('id')->toArray();
+
+        $availableBadges = Badge::whereNotIn('id', $earnedBadgeIds)->get();
+
+        foreach ($availableBadges as $badge) {
+            if ($badge->checkRequirement($user)) {
+                $user->badges()->attach($badge->id, ['earned_at' => now()]);
+                $newBadges[] = [
+                    'id' => $badge->id,
+                    'name' => $badge->name,
+                    'description' => $badge->description,
+                    'icon' => $badge->icon,
+                ];
+            }
+        }
+
+        return $newBadges;
+    }
+
 }
