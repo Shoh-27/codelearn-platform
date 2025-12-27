@@ -31,5 +31,15 @@ class LessonController extends Controller
         }
     }
 
+    public function show(string $slug)
+    {
+        try {
+            $lesson = $this->lessonService->getLessonBySlug($slug);
+            return response()->json(['data' => $lesson], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Lesson not found'], 404);
+        }
+    }
+
 
 }
