@@ -65,4 +65,28 @@ class LessonController extends Controller
         }
     }
 
+    public function update(Request $request, int $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'title' => 'sometimes|string|max:255',
+            'description' => 'nullable|string',
+            'content' => 'sometimes|string',
+            'difficulty' => 'sometimes|in:beginner,intermediate,advanced',
+            'xp_reward' => 'sometimes|integer|min:0',
+            'order_index' => 'nullable|integer',
+            'is_published' => 'nullable|boolean',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['message' => 'Validation failed', 'errors' => $validator->errors()], 422);
+        }
+
+        try {
+            $lesson = $this->lessonService->updateLesson($id, $request->all());
+            return response()->json(['message' => 'Lesson updated', 'data' => $lesson], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Failed to update lesson'], 500);
+        }
+    }
+
 }
