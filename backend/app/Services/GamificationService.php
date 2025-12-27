@@ -75,4 +75,25 @@ class GamificationService
         return $newBadges;
     }
 
+    public function getLeaderboard(int $limit = 50): array
+    {
+        return User::with(['profile'])
+            ->whereHas('profile')
+            ->get()
+            ->sortByDesc(fn($user) => $user->profile->current_xp)
+            ->take($limit)
+            ->values()
+            ->map(fn($user, $index) => [
+                'rank' => $index + 1,
+                'user_id' => $user->id,
+                'name' => $user->name,
+                'avatar' => $user->profile->avatar,
+                'current_xp' => $user->profile->current_xp,
+                'current_level' => $user->profile->current_level,
+                'challenges_completed' => $user->profile->total_challenges_completed,
+                'projects_completed' => $user->profile->total_projects_completed,
+            ])
+            ->toArray();
+    }
+
 }
