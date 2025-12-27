@@ -14,4 +14,21 @@ class GamificationController extends Controller
         $this->gamificationService = $gamificationService;
     }
 
+    public function leaderboard(Request $request)
+    {
+        try {
+            $limit = $request->query('limit', 50);
+            $leaderboard = $this->gamificationService->getLeaderboard($limit);
+
+            return response()->json([
+                'data' => $leaderboard
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to fetch leaderboard',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
 }
