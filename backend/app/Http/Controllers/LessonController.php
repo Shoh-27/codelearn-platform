@@ -89,4 +89,13 @@ class LessonController extends Controller
         }
     }
 
+    public function destroy(int $id)
+    {
+        try {
+            $this->lessonService->deleteLesson($id);
+            return response()->json(['message' => 'Lesson deleted'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Failed to delete lesson'], 500);
+        }
+    }
 }
