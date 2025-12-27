@@ -25,5 +25,30 @@ class LessonService
         ]);
     }
 
+    public function getLessonBySlug(string $slug)
+    {
+        $lesson = Lesson::where('slug', $slug)
+            ->where('is_published', true)
+            ->with('challenges')
+            ->firstOrFail();
+
+        return [
+            'id' => $lesson->id,
+            'title' => $lesson->title,
+            'slug' => $lesson->slug,
+            'description' => $lesson->description,
+            'content' => $lesson->content,
+            'difficulty' => $lesson->difficulty,
+            'xp_reward' => $lesson->xp_reward,
+            'challenges' => $lesson->challenges->map(fn($challenge) => [
+                'id' => $challenge->id,
+                'title' => $challenge->title,
+                'slug' => $challenge->slug,
+                'difficulty' => $challenge->difficulty,
+                'xp_reward' => $challenge->xp_reward,
+            ]),
+        ];
+    }
+
 
 }
