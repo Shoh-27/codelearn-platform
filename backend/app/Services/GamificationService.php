@@ -96,4 +96,15 @@ class GamificationService
             ->toArray();
     }
 
+    public function getAllBadges(): array
+    {
+        return Badge::all()->map(fn($badge) => [
+            'id' => $badge->id,
+            'name' => $badge->name,
+            'description' => $badge->description,
+            'icon' => $badge->icon,
+            'requirement_type' => $badge->requirement_type,
+            'requirement_value' => $badge->requirement_value,
+        ])->toArray();
+    }
 }
