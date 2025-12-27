@@ -19,4 +19,17 @@ class LessonController extends Controller
         $this->lessonService = $lessonService;
     }
 
+    public function index(Request $request)
+    {
+        try {
+            $difficulty = $request->query('difficulty');
+            $lessons = $this->lessonService->getAllLessons($difficulty);
+
+            return response()->json(['data' => $lessons], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Failed to fetch lessons', 'error' => $e->getMessage()], 500);
+        }
+    }
+
+
 }
