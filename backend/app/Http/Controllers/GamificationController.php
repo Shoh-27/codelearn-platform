@@ -31,4 +31,19 @@ class GamificationController extends Controller
         }
     }
 
+    public function badges()
+    {
+        try {
+            $badges = $this->gamificationService->getAllBadges();
+
+            return response()->json([
+                'data' => $badges
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to fetch badges',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 }
