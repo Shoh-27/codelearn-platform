@@ -107,4 +107,14 @@ class GamificationService
             'requirement_value' => $badge->requirement_value,
         ])->toArray();
     }
+
+    public function getAllLevels(): array
+    {
+        return Level::orderBy('level_number')->get()->map(fn($level) => [
+            'level_number' => $level->level_number,
+            'name' => $level->name,
+            'xp_required' => $level->xp_required,
+            'badge_icon' => $level->badge_icon,
+        ])->toArray();
+    }
 }
