@@ -46,4 +46,20 @@ class GamificationController extends Controller
             ], 500);
         }
     }
+
+    public function levels()
+    {
+        try {
+            $levels = $this->gamificationService->getAllLevels();
+
+            return response()->json([
+                'data' => $levels
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to fetch levels',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 }
