@@ -41,5 +41,28 @@ class LessonController extends Controller
         }
     }
 
+    public function store(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'content' => 'required|string',
+            'difficulty' => 'required|in:beginner,intermediate,advanced',
+            'xp_reward' => 'required|integer|min:0',
+            'order_index' => 'nullable|integer',
+            'is_published' => 'nullable|boolean',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['message' => 'Validation failed', 'errors' => $validator->errors()], 422);
+        }
+
+        try {
+            $lesson = $this->lessonService->createLesson($request->all());
+            return response()->json(['message' => 'Lesson created', 'data' => $lesson], 201);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Failed to create lesson', 'error' => $e->getMessage()], 500);
+        }
+    }
 
 }
