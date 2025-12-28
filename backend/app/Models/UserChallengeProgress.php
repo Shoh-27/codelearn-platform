@@ -30,5 +30,22 @@ class UserChallengeProgress extends Model
         'completed_at' => 'datetime',
     ];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
+    public function challenge()
+    {
+        return $this->belongsTo(Challenge::class);
+    }
+
+    public function markCompleted(int $xpEarned): void
+    {
+        $this->update([
+            'status' => 'completed',
+            'xp_earned' => $xpEarned,
+            'completed_at' => now(),
+        ]);
+    }
 }
