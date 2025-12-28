@@ -37,4 +37,24 @@ class ProjectService
         ]);
     }
 
+    public function getProjectBySlug(string $slug)
+    {
+        $project = Project::where('slug', $slug)
+            ->where('is_published', true)
+            ->firstOrFail();
+
+        return [
+            'id' => $project->id,
+            'title' => $project->title,
+            'slug' => $project->slug,
+            'description' => $project->description,
+            'requirements' => $project->requirements,
+            'difficulty' => $project->difficulty,
+            'xp_reward' => $project->xp_reward,
+            'estimated_hours' => $project->estimated_hours,
+            'technologies' => $project->technologies,
+        ];
+    }
+
+
 }
