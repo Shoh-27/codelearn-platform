@@ -55,5 +55,15 @@ class ChallengeController extends Controller
         }
     }
 
+    public function progress(int $id)
+    {
+        try {
+            $progress = $this->challengeService->getUserProgress(auth()->user(), $id);
+            return response()->json(['data' => $progress], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Failed to fetch progress'], 500);
+        }
+    }
+
 
 }
