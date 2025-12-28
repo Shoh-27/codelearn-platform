@@ -37,5 +37,23 @@ class ChallengeController extends Controller
         }
     }
 
+    public function submit(Request $request, int $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'code' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['message' => 'Validation failed', 'errors' => $validator->errors()], 422);
+        }
+
+        try {
+            $result = $this->challengeService->submitChallenge(auth()->user(), $id, $request->input('code'));
+            return response()->json($result, 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Submission failed', 'error' => $e->getMessage()], 500);
+        }
+    }
+
 
 }
