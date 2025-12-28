@@ -16,4 +16,30 @@ class ChallengeService
         $this->gamificationService = $gamificationService;
     }
 
+    public function getAllChallenges(?string $difficulty = null)
+    {
+        $query = Challenge::where('is_published', true)->with('lesson');
+
+        if ($difficulty) {
+            $query->where('difficulty', $difficulty);
+        }
+
+        return $query->get()->map(fn($challenge) => [
+            'id' => $challenge->id,
+            'title' => $challenge->title,
+            'slug' => $challenge->slug,
+            'description' => $challenge->description,
+            'difficulty' => $challenge->difficulty,
+            'challenge_type' => $challenge->challenge_type,
+            'xp_reward' => $challenge->xp_reward,
+            'time_limit_minutes' => $challenge->time_limit_minutes,
+            'lesson' => $challenge->lesson ? [
+                'id' => $challenge->lesson->id,
+                'title' => $challenge->lesson->title,
+                'slug' => $challenge->lesson->slug,
+            ] : null,
+        ]);
+    }
+
+
 }
