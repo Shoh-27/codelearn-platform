@@ -16,5 +16,16 @@ class ChallengeController extends Controller
         $this->challengeService = $challengeService;
     }
 
+    public function index(Request $request)
+    {
+        try {
+            $difficulty = $request->query('difficulty');
+            $challenges = $this->challengeService->getAllChallenges($difficulty);
+            return response()->json(['data' => $challenges], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Failed to fetch challenges'], 500);
+        }
+    }
+
 
 }
