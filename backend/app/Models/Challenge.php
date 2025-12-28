@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Challenge extends Model
 {
@@ -34,6 +35,15 @@ class Challenge extends Model
         'is_published' => 'boolean',
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
 
+        static::creating(function ($challenge) {
+            if (empty($challenge->slug)) {
+                $challenge->slug = Str::slug($challenge->title);
+            }
+        });
+    }
 }
 
