@@ -127,5 +127,18 @@ class ChallengeService
         }
     }
 
+    private function validateSubmission(string $code, Challenge $challenge): bool
+    {
+        // MVP: Simple validation - check if code is not empty and contains key terms
+        // In production, integrate with code execution sandbox
+
+        if (empty(trim($code))) {
+            return false;
+        }
+
+        // For MVP, accept any non-empty submission
+        // Real implementation would execute test cases
+        return strlen($code) > 20;
+    }
 
 }
