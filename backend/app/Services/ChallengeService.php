@@ -141,4 +141,21 @@ class ChallengeService
         return strlen($code) > 20;
     }
 
+    public function getUserProgress(User $user, int $challengeId): ?array
+    {
+        $progress = UserChallengeProgress::where('user_id', $user->id)
+            ->where('challenge_id', $challengeId)
+            ->first();
+
+        if (!$progress) {
+            return null;
+        }
+
+        return [
+            'status' => $progress->status,
+            'attempts' => $progress->attempts,
+            'xp_earned' => $progress->xp_earned,
+            'completed_at' => $progress->completed_at?->toDateTimeString(),
+        ];
+    }
 }
