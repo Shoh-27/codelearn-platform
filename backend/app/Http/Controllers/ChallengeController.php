@@ -90,5 +90,23 @@ class ChallengeController extends Controller
         }
     }
 
+    public function update(Request $request, int $id)
+    {
+        try {
+            $challenge = $this->challengeService->updateChallenge($id, $request->all());
+            return response()->json(['message' => 'Challenge updated', 'data' => $challenge], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Failed to update challenge'], 500);
+        }
+    }
 
+    public function destroy(int $id)
+    {
+        try {
+            $this->challengeService->deleteChallenge($id);
+            return response()->json(['message' => 'Challenge deleted'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Failed to delete challenge'], 500);
+        }
+    }
 }
