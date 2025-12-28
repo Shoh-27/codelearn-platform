@@ -33,5 +33,28 @@ class ProjectSubmission extends Model
         'reviewed_by' => 'integer',
     ];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
+    public function project()
+    {
+        return $this->belongsTo(Project::class);
+    }
+
+    public function reviewer()
+    {
+        return $this->belongsTo(User::class, 'reviewed_by');
+    }
+
+    public function isPending(): bool
+    {
+        return $this->status === 'pending';
+    }
+
+    public function isApproved(): bool
+    {
+        return $this->status === 'approved';
+    }
 }
