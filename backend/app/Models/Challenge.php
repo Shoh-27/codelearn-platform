@@ -45,5 +45,15 @@ class Challenge extends Model
             }
         });
     }
+
+    public function lesson()
+    {
+        return $this->belongsTo(Lesson::class);
+    }
+
+    public function userProgress()
+    {
+        return $this->hasMany(UserChallengeProgress::class);
+    }
 }
 

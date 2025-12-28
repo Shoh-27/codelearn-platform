@@ -42,4 +42,9 @@ class Lesson extends Model
     {
         return $this->hasMany(Challenge::class);
     }
+
+    public function userProgress()
+    {
+        return $this->hasMany(UserChallengeProgress::class);
+    }
 }
