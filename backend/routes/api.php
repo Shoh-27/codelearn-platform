@@ -2,6 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserProfileController;
+use App\Http\Controllers\LessonController;
+use App\Http\Controllers\ChallengeController;
 use App\Http\Controllers\GamificationController;
 /*
 |--------------------------------------------------------------------------
@@ -22,6 +25,27 @@ Route::middleware(['jwt.auth'])->group(function () {
     Route::prefix('auth')->group(function () {
         Route::get('/me', [AuthController::class, 'me']);
         Route::post('/logout', [AuthController::class, 'logout']);
+    });
+
+    // User Profile
+    Route::prefix('profile')->group(function () {
+        Route::get('/', [UserProfileController::class, 'show']);
+        Route::put('/', [UserProfileController::class, 'update']);
+        Route::get('/stats', [UserProfileController::class, 'stats']);
+    });
+
+    // Lessons
+    Route::prefix('lessons')->group(function () {
+        Route::get('/', [LessonController::class, 'index']);
+        Route::get('/{slug}', [LessonController::class, 'show']);
+    });
+
+    // Challenges
+    Route::prefix('challenges')->group(function () {
+        Route::get('/', [ChallengeController::class, 'index']);
+        Route::get('/{slug}', [ChallengeController::class, 'show']);
+        Route::post('/{id}/submit', [ChallengeController::class, 'submit']);
+        Route::get('/{id}/progress', [ChallengeController::class, 'progress']);
     });
 
     // Gamification

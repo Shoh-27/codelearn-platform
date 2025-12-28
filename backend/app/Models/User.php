@@ -45,6 +45,11 @@ class User extends Authenticatable
         return $this->hasMany(XpTransaction::class);
     }
 
+    public function challengeProgress()
+    {
+        return $this->hasMany(UserChallengeProgress::class);
+    }
+
     public function isAdmin(): bool
     {
         return $this->role === 'admin';

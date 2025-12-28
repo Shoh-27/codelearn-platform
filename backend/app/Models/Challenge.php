@@ -6,24 +6,32 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-class Lesson extends Model
+class Challenge extends Model
 {
     use HasFactory;
 
     protected $fillable = [
+        'lesson_id',
         'title',
         'slug',
         'description',
-        'content',
         'difficulty',
+        'challenge_type',
         'xp_reward',
-        'order_index',
+        'time_limit_minutes',
+        'test_cases',
+        'starter_code',
+        'solution_code',
+        'hints',
         'is_published',
     ];
 
     protected $casts = [
+        'lesson_id' => 'integer',
         'xp_reward' => 'integer',
-        'order_index' => 'integer',
+        'time_limit_minutes' => 'integer',
+        'test_cases' => 'array',
+        'hints' => 'array',
         'is_published' => 'boolean',
     ];
 
@@ -31,16 +39,16 @@ class Lesson extends Model
     {
         parent::boot();
 
-        static::creating(function ($lesson) {
-            if (empty($lesson->slug)) {
-                $lesson->slug = Str::slug($lesson->title);
+        static::creating(function ($challenge) {
+            if (empty($challenge->slug)) {
+                $challenge->slug = Str::slug($challenge->title);
             }
         });
     }
 
-    public function challenges()
+    public function lesson()
     {
-        return $this->hasMany(Challenge::class);
+        return $this->belongsTo(Lesson::class);
     }
 
     public function userProgress()
@@ -48,3 +56,4 @@ class Lesson extends Model
         return $this->hasMany(UserChallengeProgress::class);
     }
 }
+
