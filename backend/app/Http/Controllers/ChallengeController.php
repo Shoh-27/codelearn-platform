@@ -65,5 +65,30 @@ class ChallengeController extends Controller
         }
     }
 
+    public function store(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'lesson_id' => 'nullable|exists:lessons,id',
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'difficulty' => 'required|in:beginner,intermediate,advanced',
+            'challenge_type' => 'required|in:multiple_choice,coding,project',
+            'xp_reward' => 'required|integer|min:0',
+            'starter_code' => 'nullable|string',
+            'solution_code' => 'nullable|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['message' => 'Validation failed', 'errors' => $validator->errors()], 422);
+        }
+
+        try {
+            $challenge = $this->challengeService->createChallenge($request->all());
+            return response()->json(['message' => 'Challenge created', 'data' => $challenge], 201);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Failed to create challenge'], 500);
+        }
+    }
+
 
 }
