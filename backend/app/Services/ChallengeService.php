@@ -158,4 +158,21 @@ class ChallengeService
             'completed_at' => $progress->completed_at?->toDateTimeString(),
         ];
     }
+
+    public function createChallenge(array $data): Challenge
+    {
+        return Challenge::create($data);
+    }
+
+    public function updateChallenge(int $id, array $data): Challenge
+    {
+        $challenge = Challenge::findOrFail($id);
+        $challenge->update($data);
+        return $challenge->fresh();
+    }
+
+    public function deleteChallenge(int $id): void
+    {
+        Challenge::findOrFail($id)->delete();
+    }
 }
