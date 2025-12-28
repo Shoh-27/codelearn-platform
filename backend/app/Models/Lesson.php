@@ -38,4 +38,8 @@ class Lesson extends Model
         });
     }
 
+    public function challenges()
+    {
+        return $this->hasMany(Challenge::class);
+    }
 }
