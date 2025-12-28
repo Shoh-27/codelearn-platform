@@ -27,5 +27,15 @@ class ChallengeController extends Controller
         }
     }
 
+    public function show(string $slug)
+    {
+        try {
+            $challenge = $this->challengeService->getChallengeBySlug($slug);
+            return response()->json(['data' => $challenge], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Challenge not found'], 404);
+        }
+    }
+
 
 }
