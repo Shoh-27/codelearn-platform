@@ -66,5 +66,66 @@ class ChallengeService
         ];
     }
 
+    public function submitChallenge(User $user, int $challengeId, string $code): array
+    {
+        DB::beginTransaction();
+
+        try {
+            $challenge = Challenge::findOrFail($challengeId);
+
+            // Get or create progress
+            $progress = UserChallengeProgress::firstOrCreate(
+                ['user_id' => $user->id, 'challenge_id' => $challengeId],
+                ['status' => 'in_progress', 'attempts' => 0]
+            );
+
+            $progress->increment('attempts');
+            $progress->submitted_code = $code;
+
+            // Simple validation (MVP - basic check)
+            $isCorrect = $this->validateSubmission($code, $challenge);
+
+            if ($isCorrect) {
+                // Mark as completed
+                $progress->markCompleted($challenge->xp_reward);
+
+                // Update user profile stats
+                $user->profile->increment('total_challenges_completed');
+
+                // Award XP
+                $gamificationResult = $this->gamificationService->awardXP(
+                    $user,
+                    $challenge->xp_reward,
+                    'challenge',
+                    $challenge->id,
+                    "Completed challenge: {$challenge->title}"
+                );
+
+                DB::commit();
+
+                return [
+                    'success' => true,
+                    'message' => 'Challenge completed successfully!',
+                    'xp_awarded' => $challenge->xp_reward,
+                    'gamification' => $gamificationResult,
+                ];
+            }
+
+            $progress->status = 'failed';
+            $progress->save();
+
+            DB::commit();
+
+            return [
+                'success' => false,
+                'message' => 'Solution incorrect. Try again!',
+                'attempts' => $progress->attempts,
+            ];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
+    }
+
 
 }
