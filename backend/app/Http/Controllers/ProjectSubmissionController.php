@@ -15,5 +15,15 @@ class ProjectSubmissionController extends Controller
         $this->projectService = $projectService;
     }
 
+    public function index()
+    {
+        try {
+            $submissions = $this->projectService->getUserSubmissions(auth()->user());
+            return response()->json(['data' => $submissions], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Failed to fetch submissions'], 500);
+        }
+    }
+
 
 }
