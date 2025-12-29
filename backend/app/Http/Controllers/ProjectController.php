@@ -26,5 +26,15 @@ class ProjectController extends Controller
         }
     }
 
+    public function show(string $slug)
+    {
+        try {
+            $project = $this->projectService->getProjectBySlug($slug);
+            return response()->json(['data' => $project], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Project not found'], 404);
+        }
+    }
+
 
 }
