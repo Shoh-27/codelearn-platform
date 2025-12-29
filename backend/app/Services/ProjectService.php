@@ -133,5 +133,26 @@ class ProjectService
         ];
     }
 
+    public function getPendingSubmissions()
+    {
+        return ProjectSubmission::where('status', 'pending')
+            ->with(['project', 'user'])
+            ->latest()
+            ->get()
+            ->map(fn($submission) => [
+                'id' => $submission->id,
+                'user' => [
+                    'id' => $submission->user->id,
+                    'name' => $submission->user->name,
+                ],
+                'project' => [
+                    'id' => $submission->project->id,
+                    'title' => $submission->project->title,
+                ],
+                'repository_url' => $submission->repository_url,
+                'submitted_at' => $submission->submitted_at->diffForHumans(),
+            ]);
+    }
+
 
 }
