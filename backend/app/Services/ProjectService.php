@@ -207,5 +207,20 @@ class ProjectService
         }
     }
 
+    public function createProject(array $data): Project
+    {
+        return Project::create($data);
+    }
 
+    public function updateProject(int $id, array $data): Project
+    {
+        $project = Project::findOrFail($id);
+        $project->update($data);
+        return $project->fresh();
+    }
+
+    public function deleteProject(int $id): void
+    {
+        Project::findOrFail($id)->delete();
+    }
 }
