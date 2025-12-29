@@ -79,4 +79,29 @@ class ProjectService
             throw $e;
         }
     }
+
+    public function getUserSubmissions(User $user)
+    {
+        return $user->projectSubmissions()
+            ->with('project')
+            ->latest()
+            ->get()
+            ->map(fn($submission) => [
+                'id' => $submission->id,
+                'project' => [
+                    'id' => $submission->project->id,
+                    'title' => $submission->project->title,
+                    'slug' => $submission->project->slug,
+                ],
+                'repository_url' => $submission->repository_url,
+                'live_demo_url' => $submission->live_demo_url,
+                'status' => $submission->status,
+                'xp_awarded' => $submission->xp_awarded,
+                'submitted_at' => $submission->submitted_at->toDateTimeString(),
+                'reviewed_at' => $submission->reviewed_at?->toDateTimeString(),
+                'admin_feedback' => $submission->admin_feedback,
+            ]);
+    }
+
+
 }
