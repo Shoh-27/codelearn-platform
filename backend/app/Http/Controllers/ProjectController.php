@@ -36,5 +36,30 @@ class ProjectController extends Controller
         }
     }
 
+    public function store(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'requirements' => 'required|string',
+            'difficulty' => 'required|in:beginner,intermediate,advanced',
+            'xp_reward' => 'required|integer|min:0',
+            'estimated_hours' => 'nullable|integer',
+            'technologies' => 'nullable|array',
+            'is_published' => 'nullable|boolean',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['message' => 'Validation failed', 'errors' => $validator->errors()], 422);
+        }
+
+        try {
+            $project = $this->projectService->createProject($request->all());
+            return response()->json(['message' => 'Project created', 'data' => $project], 201);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Failed to create project'], 500);
+        }
+    }
+
 
 }
