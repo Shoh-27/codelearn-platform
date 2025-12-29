@@ -154,5 +154,58 @@ class ProjectService
             ]);
     }
 
+    public function reviewSubmission(int $submissionId, User $admin, array $data): array
+    {
+        DB::beginTransaction();
+
+        try {
+            $submission = ProjectSubmission::with(['user', 'project'])->findOrFail($submissionId);
+
+            $submission->update([
+                'status' => $data['status'],
+                'admin_feedback' => $data['feedback'] ?? null,
+                'reviewed_at' => now(),
+                'reviewed_by' => $admin->id,
+            ]);
+
+            // If approved, award XP
+            if ($data['status'] === 'approved') {
+                $xpAwarded = $submission->project->xp_reward;
+                $submission->update(['xp_awarded' => $xpAwarded]);
+
+                // Update user stats
+                $submission->user->profile->increment('total_projects_completed');
+
+                // Award XP
+                $gamificationResult = $this->gamificationService->awardXP(
+                    $submission->user,
+                    $xpAwarded,
+                    'project',
+                    $submission->project_id,
+                    "Project approved: {$submission->project->title}"
+                );
+
+                DB::commit();
+
+                return [
+                    'success' => true,
+                    'message' => 'Project approved and XP awarded',
+                    'xp_awarded' => $xpAwarded,
+                    'gamification' => $gamificationResult,
+                ];
+            }
+
+            DB::commit();
+
+            return [
+                'success' => true,
+                'message' => 'Review submitted successfully',
+            ];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
+    }
+
 
 }
