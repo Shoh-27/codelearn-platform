@@ -61,5 +61,23 @@ class ProjectController extends Controller
         }
     }
 
+    public function update(Request $request, int $id)
+    {
+        try {
+            $project = $this->projectService->updateProject($id, $request->all());
+            return response()->json(['message' => 'Project updated', 'data' => $project], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Failed to update project'], 500);
+        }
+    }
 
+    public function destroy(int $id)
+    {
+        try {
+            $this->projectService->deleteProject($id);
+            return response()->json(['message' => 'Project deleted'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Failed to delete project'], 500);
+        }
+    }
 }
