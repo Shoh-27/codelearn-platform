@@ -100,5 +100,35 @@ class AdminController extends Controller
         }
     }
 
+    public function getUser(int $id)
+    {
+        try {
+            $user = User::with(['profile', 'badges', 'challengeProgress', 'projectSubmissions'])
+                ->findOrFail($id);
+
+            return response()->json([
+                'data' => [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'role' => $user->role,
+                    'is_active' => $user->is_active,
+                    'profile' => [
+                        'bio' => $user->profile->bio,
+                        'current_xp' => $user->profile->current_xp,
+                        'current_level' => $user->profile->current_level,
+                        'challenges_completed' => $user->profile->total_challenges_completed,
+                        'projects_completed' => $user->profile->total_projects_completed,
+                    ],
+                    'badges_count' => $user->badges->count(),
+                    'submissions_count' => $user->projectSubmissions->count(),
+                    'created_at' => $user->created_at->format('Y-m-d H:i:s'),
+                ]
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+    }
+
 
 }
