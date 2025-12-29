@@ -130,5 +130,36 @@ class AdminController extends Controller
         }
     }
 
+    public function toggleUserActive(int $id)
+    {
+        try {
+            $user = User::findOrFail($id);
+            $user->is_active = !$user->is_active;
+            $user->save();
 
+            return response()->json([
+                'message' => $user->is_active ? 'User activated' : 'User deactivated',
+                'data' => ['is_active' => $user->is_active]
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Failed to toggle user status'], 500);
+        }
+    }
+
+    public function deleteUser(int $id)
+    {
+        try {
+            $user = User::findOrFail($id);
+
+            if ($user->isAdmin()) {
+                return response()->json(['message' => 'Cannot delete admin users'], 403);
+            }
+
+            $user->delete();
+
+            return response()->json(['message' => 'User deleted successfully'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Failed to delete user'], 500);
+        }
+    }
 }
