@@ -63,5 +63,42 @@ class AdminController extends Controller
         }
     }
 
+    public function getUsers(Request $request)
+    {
+        try {
+            $query = User::where('role', 'student')->with('profile');
+
+            if ($request->has('search')) {
+                $search = $request->query('search');
+                $query->where(function($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%");
+                });
+            }
+
+            $users = $query->paginate(20);
+
+            return response()->json([
+                'data' => $users->map(fn($user) => [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'is_active' => $user->is_active,
+                    'current_level' => $user->profile->current_level ?? 1,
+                    'current_xp' => $user->profile->current_xp ?? 0,
+                    'created_at' => $user->created_at->format('Y-m-d'),
+                ]),
+                'meta' => [
+                    'current_page' => $users->currentPage(),
+                    'last_page' => $users->lastPage(),
+                    'per_page' => $users->perPage(),
+                    'total' => $users->total(),
+                ]
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Failed to fetch users'], 500);
+        }
+    }
+
 
 }
