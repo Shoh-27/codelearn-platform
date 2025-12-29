@@ -103,5 +103,35 @@ class ProjectService
             ]);
     }
 
+    public function getSubmissionById(int $id)
+    {
+        $submission = ProjectSubmission::with(['project', 'user', 'reviewer'])
+            ->findOrFail($id);
+
+        return [
+            'id' => $submission->id,
+            'user' => [
+                'id' => $submission->user->id,
+                'name' => $submission->user->name,
+            ],
+            'project' => [
+                'id' => $submission->project->id,
+                'title' => $submission->project->title,
+            ],
+            'repository_url' => $submission->repository_url,
+            'live_demo_url' => $submission->live_demo_url,
+            'description' => $submission->description,
+            'status' => $submission->status,
+            'xp_awarded' => $submission->xp_awarded,
+            'admin_feedback' => $submission->admin_feedback,
+            'submitted_at' => $submission->submitted_at->toDateTimeString(),
+            'reviewed_at' => $submission->reviewed_at?->toDateTimeString(),
+            'reviewer' => $submission->reviewer ? [
+                'id' => $submission->reviewer->id,
+                'name' => $submission->reviewer->name,
+            ] : null,
+        ];
+    }
+
 
 }
