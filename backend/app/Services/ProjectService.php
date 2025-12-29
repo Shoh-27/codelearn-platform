@@ -56,5 +56,27 @@ class ProjectService
         ];
     }
 
+    public function submitProject(User $user, array $data): ProjectSubmission
+    {
+        DB::beginTransaction();
 
+        try {
+            $submission = ProjectSubmission::create([
+                'user_id' => $user->id,
+                'project_id' => $data['project_id'],
+                'repository_url' => $data['repository_url'],
+                'live_demo_url' => $data['live_demo_url'] ?? null,
+                'description' => $data['description'] ?? null,
+                'status' => 'pending',
+                'submitted_at' => now(),
+            ]);
+
+            DB::commit();
+
+            return $submission;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
+    }
 }
