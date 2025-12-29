@@ -15,5 +15,16 @@ class ProjectController extends Controller
         $this->projectService = $projectService;
     }
 
+    public function index(Request $request)
+    {
+        try {
+            $difficulty = $request->query('difficulty');
+            $projects = $this->projectService->getAllProjects($difficulty);
+            return response()->json(['data' => $projects], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Failed to fetch projects'], 500);
+        }
+    }
+
 
 }
