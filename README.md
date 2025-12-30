@@ -54,7 +54,7 @@ Bu MVP (Minimum Viable Product) versiyasi bo'lib, quyidagi asosiy funksiyalarni 
 ### 1️⃣ Loyihani clone qiling
 
 ```bash
-git clone https://github.com/yourusername/gamified-edu-platform.git
+git clone https://github.com/Shoh-27/codelearn-platform.git
 cd gamified-edu-platform
 ```
 
