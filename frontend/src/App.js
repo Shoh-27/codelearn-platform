@@ -12,6 +12,10 @@ import { Projects } from './pages/Projects.js';
 import {ProjectDetail} from './pages/ProjectDetail.js';
 import { Leaderboard } from './pages/Leaderboard.js';
 import { AdminDashboard } from './pages/admin/AdminDashboard.js';
+import { AdminUsers } from './pages/admin/AdminUsers.js';
+import { AdminChallenges } from './pages/admin/AdminChallenges.js';
+import { AdminProjects } from './pages/admin/AdminProjects.js';
+import { AdminSubmissions } from './pages/admin/AdminSubmissions.js';
 
 // Protected Route Wrapper
 function ProtectedRoute({ children, adminOnly = false }) {
@@ -156,6 +160,42 @@ function App() {
                             element={
                                 <ProtectedRoute adminOnly>
                                     <AdminDashboard />
+                                </ProtectedRoute>
+                            }
+                        />
+
+                        <Route
+                            path="/admin/users"
+                            element={
+                                <ProtectedRoute adminOnly>
+                                    <AdminUsers />
+                                </ProtectedRoute>
+                            }
+                        />
+
+                        <Route
+                            path="/admin/challenges"
+                            element={
+                                <ProtectedRoute adminOnly>
+                                    <AdminChallenges />
+                                </ProtectedRoute>
+                            }
+                        />
+
+                        <Route
+                            path="/admin/projects"
+                            element={
+                                <ProtectedRoute adminOnly>
+                                    <AdminProjects />
+                                </ProtectedRoute>
+                            }
+                        />
+
+                        <Route
+                            path="/admin/submissions"
+                            element={
+                                <ProtectedRoute adminOnly>
+                                    <AdminSubmissions />
                                 </ProtectedRoute>
                             }
                         />
