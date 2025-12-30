@@ -16,7 +16,7 @@ class JWTService
     public function __construct()
     {
         $this->secret = config('jwt.secret');
-        $this->ttl = config('jwt.ttl');
+        $this->ttl = (int) config('jwt.ttl');
         $this->algo = config('jwt.algo');
     }
 

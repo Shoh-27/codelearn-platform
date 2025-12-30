@@ -1,5 +1,6 @@
-import React, {useState} from "react";
-import {useAuth} from "../contexts/AuthContext.js";
+import React, { useState } from "react";
+import { useNavigate, Link } from 'react-router-dom'; // Link ham shu yerda import qilindi
+import { useAuth } from "../contexts/AuthContext.js";
 
 export function Register() {
     const [name, setName] = useState('');

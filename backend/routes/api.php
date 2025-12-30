@@ -8,6 +8,7 @@ use App\Http\Controllers\ChallengeController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ProjectSubmissionController;
 use App\Http\Controllers\GamificationController;
+use App\Http\Controllers\AdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -74,6 +75,14 @@ Route::middleware(['jwt.auth'])->group(function () {
     // Admin Routes
     Route::middleware(['admin'])->prefix('admin')->group(function () {
 
+        // User Management
+        Route::prefix('users')->group(function () {
+            Route::get('/', [AdminController::class, 'getUsers']);
+            Route::get('/{id}', [AdminController::class, 'getUser']);
+            Route::put('/{id}/toggle-active', [AdminController::class, 'toggleUserActive']);
+            Route::delete('/{id}', [AdminController::class, 'deleteUser']);
+        });
+
         // Lessons Management
         Route::prefix('lessons')->group(function () {
             Route::post('/', [LessonController::class, 'store']);
@@ -100,5 +109,8 @@ Route::middleware(['jwt.auth'])->group(function () {
             Route::get('/pending', [ProjectSubmissionController::class, 'pending']);
             Route::put('/{id}/review', [ProjectSubmissionController::class, 'review']);
         });
+
+        // Dashboard Stats
+        Route::get('/dashboard', [AdminController::class, 'dashboard']);
     });
 });

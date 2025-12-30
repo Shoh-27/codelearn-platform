@@ -39,21 +39,42 @@ class ChallengeController extends Controller
 
     public function submit(Request $request, int $id)
     {
+        $user = auth()->user();
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'Unauthenticated'
+            ], 401);
+        }
+
         $validator = Validator::make($request->all(), [
             'code' => 'required|string',
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['message' => 'Validation failed', 'errors' => $validator->errors()], 422);
+            return response()->json([
+                'message' => 'Validation failed',
+                'errors' => $validator->errors()
+            ], 422);
         }
 
         try {
-            $result = $this->challengeService->submitChallenge(auth()->user(), $id, $request->input('code'));
+            $result = $this->challengeService->submitChallenge(
+                $user,
+                $id,
+                $request->input('code')
+            );
+
             return response()->json($result, 200);
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'Submission failed', 'error' => $e->getMessage()], 500);
+
+        } catch (\Throwable $e) {
+            return response()->json([
+                'message' => 'Submission failed',
+                'error' => $e->getMessage()
+            ], 500);
         }
     }
+
 
     public function progress(int $id)
     {

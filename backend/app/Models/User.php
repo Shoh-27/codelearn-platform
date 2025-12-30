@@ -28,6 +28,7 @@ class User extends Authenticatable
         'updated_at' => 'datetime',
     ];
 
+    // Relationships
     public function profile()
     {
         return $this->hasOne(UserProfile::class);
@@ -40,16 +41,22 @@ class User extends Authenticatable
             ->withPivot('earned_at');
     }
 
-    public function xpTransactions()
-    {
-        return $this->hasMany(XpTransaction::class);
-    }
-
     public function challengeProgress()
     {
         return $this->hasMany(UserChallengeProgress::class);
     }
 
+    public function projectSubmissions()
+    {
+        return $this->hasMany(ProjectSubmission::class);
+    }
+
+    public function xpTransactions()
+    {
+        return $this->hasMany(XpTransaction::class);
+    }
+
+    // Helper Methods
     public function isAdmin(): bool
     {
         return $this->role === 'admin';

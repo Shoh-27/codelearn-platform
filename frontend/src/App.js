@@ -1,14 +1,17 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider, useAuth } from './contexts/AuthContext';
-import { Navbar } from './components/Navbar';
-import { Login, Register } from './pages/Login';
-import { Dashboard } from './pages/Dashboard';
-import { Profile } from './pages/Profile';
-import { Challenges, ChallengeDetail } from './pages/Challenges';
-import { Projects, ProjectDetail } from './pages/Projects';
-import { Leaderboard } from './pages/Leaderboard';
-import { AdminDashboard } from './pages/admin/AdminDashboard';
+import { AuthProvider, useAuth } from './contexts/AuthContext.js';
+import { Navbar } from './components/Navbar.js';
+import { Login } from './pages/Login.js';
+import { Register } from './pages/Register.js';
+import { Dashboard } from './pages/Dashboard.js';
+import { Profile } from './pages/Profile.js';
+import { Challenges } from './pages/Challenges.js';
+import { ChallengeDetail } from './pages/ChallengeDetail.js';
+import { Projects } from './pages/Projects.js';
+import {ProjectDetail} from './pages/ProjectDetail.js';
+import { Leaderboard } from './pages/Leaderboard.js';
+import { AdminDashboard } from './pages/admin/AdminDashboard.js';
 
 // Protected Route Wrapper
 function ProtectedRoute({ children, adminOnly = false }) {
