@@ -1,0 +1,51 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
+
+class UserChallengeProgress extends Model
+{
+    use HasFactory;
+
+    protected $table = 'user_challenge_progress';
+
+    protected $fillable = [
+        'user_id',
+        'challenge_id',
+        'status',
+        'submitted_code',
+        'attempts',
+        'xp_earned',
+        'completed_at',
+    ];
+
+    protected $casts = [
+        'user_id' => 'integer',
+        'challenge_id' => 'integer',
+        'attempts' => 'integer',
+        'xp_earned' => 'integer',
+        'completed_at' => 'datetime',
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function challenge()
+    {
+        return $this->belongsTo(Challenge::class);
+    }
+
+    public function markCompleted(int $xpEarned): void
+    {
+        $this->update([
+            'status' => 'completed',
+            'xp_earned' => $xpEarned,
+            'completed_at' => now(),
+        ]);
+    }
+}

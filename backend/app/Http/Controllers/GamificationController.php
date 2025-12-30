@@ -1,0 +1,65 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Services\GamificationService;
+use Illuminate\Http\Request;
+
+class GamificationController extends Controller
+{
+    private GamificationService $gamificationService;
+
+    public function __construct(GamificationService $gamificationService)
+    {
+        $this->gamificationService = $gamificationService;
+    }
+
+    public function leaderboard(Request $request)
+    {
+        try {
+            $limit = $request->query('limit', 50);
+            $leaderboard = $this->gamificationService->getLeaderboard($limit);
+
+            return response()->json([
+                'data' => $leaderboard
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to fetch leaderboard',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function badges()
+    {
+        try {
+            $badges = $this->gamificationService->getAllBadges();
+
+            return response()->json([
+                'data' => $badges
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to fetch badges',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function levels()
+    {
+        try {
+            $levels = $this->gamificationService->getAllLevels();
+
+            return response()->json([
+                'data' => $levels
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to fetch levels',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+}
